@@ -20,18 +20,59 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ScreenHome extends StatelessWidget {
+class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
+
+  @override
+  State<ScreenHome> createState() => _ScreenHomeState();
+}
+
+class _ScreenHomeState extends State<ScreenHome> {
+  final numberInputController = TextEditingController();
+
+  String resultText = 'Type Number and Press get result';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            getNumberFact(number: 19);
-          },
-          child: const Text('Get Result'),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: numberInputController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter a number',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final number = numberInputController.text;
+                  final result = await getNumberFact(number: number);
+                  print(result.text);
+                  setState(() {
+                    resultText = result.text ?? 'No result';
+                  });
+                  // if (number.isNotEmpty) {
+
+                  // }
+                  // return;
+                },
+                child: const Text('Get Result'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(resultText),
+            ],
+          ),
         ),
       ),
     );
